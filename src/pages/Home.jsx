@@ -1,6 +1,6 @@
 import {useQuery, gql} from "@apollo/client"
 import Persons from "../components/Persons"
-import {memo, useState} from "react"
+import {useState} from "react"
 import Person from "../components/Person"
 import AddPersonForm from "../components/AddPersonForm"
 import {GET_PERSONS} from "../lib/queries"
@@ -29,7 +29,7 @@ export default function Home() {
             setErrorMessage(null)
         }, 10000)
     }
-    //loading:singleLoading, data:singleData, error:singleError
+
     const result = useQuery(query, {
         variables: {name},
         skip: !name,
@@ -43,33 +43,19 @@ export default function Home() {
     const handleName = (n) => setName(n)
     const onClose = () => setName(null)
 
-    const testFn = () => console.log("Test Function")
-
-    console.count("Home rendered")
     return (
         <>
             <h1>Home</h1>
-
-            {/* {data.allBooks.map((book) => (
-                <Book key={book.id} {...book} />
-            ))} */}
-
-            {/* <button onClick={() => setName("Matti Luukkainen")}>Single</button> */}
 
             {result?.data && name && (
                 <Person person={result.data.person} onClose={onClose} />
             )}
 
             <Persons persons={data.allPersons} handle={handleName} />
-            <Test example={testFn} />
+
             {errorMessage && <h2 className=" text-red-700">{errorMessage}</h2>}
             <AddPersonForm handleErr={handleErr} />
             <PhoneEditForm handleErr={handleErr} />
         </>
     )
 }
-
-const Test = memo(({example}) => {
-    console.count("TESTing")
-    return <h1 onClick={example}>Testing</h1>
-})

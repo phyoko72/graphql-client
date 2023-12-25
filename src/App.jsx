@@ -1,9 +1,9 @@
-import "./App.css"
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client"
-import Home from "./pages/Home"
+import {RouterProvider} from "react-router-dom"
+import router from "./lib/route"
 
 export const client = new ApolloClient({
-    uri: "http://localhost:5000/",
+    uri: import.meta.env.VITE_SERVER,
     cache: new InMemoryCache(),
 })
 
@@ -12,7 +12,7 @@ function App() {
     return (
         <>
             <ApolloProvider client={client}>
-                <Home />
+                <RouterProvider router={router} />
             </ApolloProvider>
         </>
     )
