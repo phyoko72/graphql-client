@@ -1,18 +1,19 @@
 import {useMutation} from "@apollo/client"
 import {LOGIN_USER} from "../lib/queries"
-import {useEffect, useRef} from "react"
+import {useEffect, useRef, useState} from "react"
 import {useNavigate} from "react-router-dom"
 
 export default function Login() {
     const navigate = useNavigate()
+    const [err, setErr] = useState(null)
     const [login, result] = useMutation(LOGIN_USER, {
         onError: (err) => {
             console.log("login err: ", err)
+            setErr(err.message)
         },
     })
-    console.log("outside result: ", result)
+
     useEffect(() => {
-        console.log("inside result: ", result.data?.loginUser.value)
         if (result.data) {
             localStorage.setItem(
                 "user-token",
@@ -32,7 +33,8 @@ export default function Login() {
     }
     return (
         <>
-            <h1>Login</h1>
+            <h1 className=" text-3xl">Login Form</h1>
+            {err && <h2>{err}</h2>}
             <form ref={formRef} onSubmit={handleLogin}>
                 <div>
                     <input

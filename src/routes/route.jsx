@@ -9,9 +9,12 @@ import Persons from "../pages/Persons"
 
 const router = createBrowserRouter([
     {
-        // path: "/",
-        // element: <Layout />,
-        children: [{path: "/login", element: <Login />}],
+        path: "/login",
+        element: (
+            <Layout>
+                <Login />
+            </Layout>
+        ),
     },
     {
         element: <PrivateRoutes />,

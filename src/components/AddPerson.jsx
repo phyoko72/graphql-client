@@ -1,6 +1,6 @@
 import {useMutation} from "@apollo/client"
-import {useRef, useState} from "react"
 import {ADD_PERSON, ALL_PERSONS} from "../lib/queries"
+import {updateCache} from "../lib/cache"
 
 export default function AddPerson() {
     console.count("AddBook rendered")
@@ -10,14 +10,17 @@ export default function AddPerson() {
             console.log("addPerson err: ", err)
         },
         update: (cache, response) => {
-            console.log({cache, response})
-            cache.updateQuery({query: ALL_PERSONS}, ({allPersons}) => {
-                return {
-                    allPersons: allPersons.concat(response.data.addPerson),
-                }
-            })
+            updateCache(cache, {query: ALL_PERSONS}, response.data.addPerson)
         },
     })
+    // update: (cache, response) => {
+    //     console.log({cache, response})
+    //     cache.updateQuery({query: ALL_PERSONS}, ({allPersons}) => {
+    //         return {
+    //             allPersons: allPersons.concat(response.data.addPerson),
+    //         }
+    //     })
+    // },
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -27,7 +30,6 @@ export default function AddPerson() {
         const street = e.target.street.value
         const city = e.target.city.value
 
-        console.log("Form: ", {name, phone, street, city})
         addPerson({
             variables: {
                 person: {

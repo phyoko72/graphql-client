@@ -1,5 +1,6 @@
 import {Navigate, Outlet} from "react-router-dom"
 import Nav from "../components/Nav"
+import Layout from "../components/Layout"
 
 export default function PrivateRoutes() {
     const user = JSON.parse(localStorage.getItem("user-token"))
@@ -7,8 +8,10 @@ export default function PrivateRoutes() {
     if (!user) return <Navigate to={"/login"} />
     return (
         <>
-            <Nav />
-            <Outlet />
+            <Layout>
+                <Nav />
+                <Outlet />
+            </Layout>
         </>
     )
 }

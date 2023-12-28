@@ -1,12 +1,25 @@
-import {useQuery} from "@apollo/client"
-import {ALL_PERSONS} from "../lib/queries"
+import {useQuery, useSubscription} from "@apollo/client"
+import {ALL_PERSONS, PERSON_ADDED} from "../lib/queries"
 import AddPerson from "../components/AddPerson"
+import {updateCache} from "../lib/cache"
+
+// client.cache.updateQuery({query: ALL_PERSONS}, ({allPersons}) => {
+//     return {
+//         allPersons: allPersons.concat(addedPerson),
+//     }
+// })
 
 export default function Persons() {
     const {loading, error, data} = useQuery(ALL_PERSONS)
+
+    useSubscription(PERSON_ADDED, {
+        onData: ({data, client}) => {
+            const addedPerson = data.data.personAdded
+            updateCache(client.cache, {query: ALL_PERSONS}, addedPerson)
+        },
+    })
     if (loading) return <h1>Loading...</h1>
-    if (error) return <h1>Error</h1>
-    console.log(data)
+    if (error) return <h1>Person Error</h1>
     return (
         <>
             <h1>All Persons</h1>
